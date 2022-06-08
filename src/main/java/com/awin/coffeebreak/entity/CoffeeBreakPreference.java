@@ -1,5 +1,7 @@
 package com.awin.coffeebreak.entity;
 
+import org.sonatype.inject.Nullable;
+
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.HashMap;
@@ -32,6 +34,7 @@ public class CoffeeBreakPreference {
     Instant requestedDate;
 
     @Transient
+    @Nullable
     Map<String, String> details;
 
     public CoffeeBreakPreference(

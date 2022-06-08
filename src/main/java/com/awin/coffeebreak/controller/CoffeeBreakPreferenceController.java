@@ -2,13 +2,13 @@ package com.awin.coffeebreak.controller;
 
 import com.awin.coffeebreak.entity.CoffeeBreakPreference;
 import com.awin.coffeebreak.entity.StaffMember;
-import com.awin.coffeebreak.services.CoffeeBreakPreferenceService;
-import com.awin.coffeebreak.services.SlackNotifier;
+import com.awin.coffeebreak.services.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.awin.coffeebreak.services.StaffMemberService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -71,7 +71,8 @@ public class CoffeeBreakPreferenceController {
 
         List<CoffeeBreakPreference> preferences = new ArrayList<>();
 
-        SlackNotifier notifier = new SlackNotifier();
+
+        NotificationService notifier = NotificationServiceFactory.getService(staffMember.get());
         boolean ok = notifier.notifyStaffMember(staffMember.get(), preferences);
 
         return ResponseEntity.ok(ok ? "OK" : "NOT OK");

@@ -2,9 +2,10 @@ package com.awin.coffeebreak.services;
 
 import com.awin.coffeebreak.entity.CoffeeBreakPreference;
 import com.awin.coffeebreak.entity.StaffMember;
+
 import java.util.List;
 
-public class SlackNotifier implements NotificationService {
+public class EmailNotifier implements NotificationService {
 
     /**
      * Imagine that this method:
@@ -14,7 +15,7 @@ public class SlackNotifier implements NotificationService {
     @Override
     public boolean notifyStaffMember(final StaffMember staffMember, final List<CoffeeBreakPreference> preferences) {
 
-        if (staffMember.getSlackIdentifier().equals("")) {
+        if (staffMember.getEmail().equals("")) {
             throw new RuntimeException();
         }
 
