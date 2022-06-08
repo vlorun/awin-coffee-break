@@ -1,15 +1,11 @@
 package com.awin.coffeebreak.entity;
 
-import java.sql.Date;
+import javax.persistence.*;
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javax.persistence.*;
 
 @Entity
 @Table(name = "coffee_break_preference")
@@ -38,7 +34,7 @@ public class CoffeeBreakPreference {
     Map<String, String> details;
 
     public CoffeeBreakPreference(
-          final String type, final String subType, final StaffMember requestedBy, final Map<String, String> details
+        final String type, final String subType, final StaffMember requestedBy, final Map<String, String> details
     ) {
         if (!TYPES.contains(type)) {
             throw new IllegalArgumentException();
@@ -56,7 +52,7 @@ public class CoffeeBreakPreference {
         this.type = type;
 
         this.requestedBy = requestedBy;
-        if(!details.isEmpty()) {
+        if (!details.isEmpty()) {
             setDetails(details);
         } else {
             setDetails(new HashMap<>());
@@ -105,26 +101,26 @@ public class CoffeeBreakPreference {
 
     public String getAsJson() {
         return "{" +
-              "\"id\":" + id +
-              ", \"type\":\"" + type + '"' +
-              ", \"subType\":\"" + subType + '"' +
-              ", \"requestedBy\":\"" + requestedBy + '"' +
-              ", \"requestedDate\":\"" + requestedDate + '"' +
-              ", \"details\":\"" + details + '"' +
-              '}';
+            "\"id\":" + id +
+            ", \"type\":\"" + type + '"' +
+            ", \"subType\":\"" + subType + '"' +
+            ", \"requestedBy\":\"" + requestedBy + '"' +
+            ", \"requestedDate\":\"" + requestedDate + '"' +
+            ", \"details\":\"" + details + '"' +
+            '}';
     }
 
     public String getAsXml() {
-        return "<preference type=\""+type+"\" subtype=\""+subType+"\">" +
-              "<requestedBy>"+requestedBy+"</requestedBy>" +
-              "<details>"+details+"</details>" +
-              "</preference>";
+        return "<preference type=\"" + type + "\" subtype=\"" + subType + "\">" +
+            "<requestedBy>" + requestedBy + "</requestedBy>" +
+            "<details>" + details + "</details>" +
+            "</preference>";
     }
 
     public String getAsListElement() {
         final String detailsString = details.keySet().stream()
-              .map(e -> e + " : " + details.get(e))
-              .collect(Collectors.joining(","));
+            .map(e -> e + " : " + details.get(e))
+            .collect(Collectors.joining(","));
 
         return "<li>" + requestedBy.getName() + " would like a " + subType + ". (" + detailsString + ")</li>";
     }
