@@ -16,6 +16,7 @@ public class CoffeeBreakPreference {
     public static List<String> FOOD_TYPES = List.of("sandwich", "crisps", "toast");
 
     @Id
+    @GeneratedValue
     Integer id;
 
     @Column

@@ -1,13 +1,10 @@
 package com.awin.coffeebreak.controller
 
 import com.awin.coffeebreak.entity.CoffeeBreakPreference
-import com.awin.coffeebreak.entity.StaffMember
-import com.awin.coffeebreak.repository.CoffeeBreakPreferenceRepository
 import com.awin.coffeebreak.services.CoffeeBreakPreferenceService
+import com.awin.coffeebreak.services.StaffMemberService
 import org.springframework.http.ResponseEntity
 import spock.lang.Specification
-
-import java.time.Instant
 
 class CoffeeBreakPreferenceControllerSpec extends Specification {
 
@@ -15,12 +12,13 @@ class CoffeeBreakPreferenceControllerSpec extends Specification {
         given: "The content format is null"
         def format = null
 
-        and: "repository will return an empty list"
-        CoffeeBreakPreferenceService repository = Mock(CoffeeBreakPreferenceService)
-        repository.getCurrentPreferences() >> List.of()
+        and: "preferenceService will return an empty list"
+        CoffeeBreakPreferenceService preferenceService = Mock(CoffeeBreakPreferenceService)
+        StaffMemberService staffMemberService = Mock(StaffMemberService);
+        preferenceService.getCurrentPreferences() >> List.of()
 
         and: "We construct the CoffeeBreakController"
-        CoffeeBreakPreferenceController preferenceController = new CoffeeBreakPreferenceController(repository)
+        CoffeeBreakPreferenceController preferenceController = new CoffeeBreakPreferenceController(preferenceService, staffMemberService)
 
         when: "We call the today method"
         ResponseEntity<?> responseEntity = preferenceController.today(format)
@@ -36,24 +34,27 @@ class CoffeeBreakPreferenceControllerSpec extends Specification {
         given: "The content format is null"
         def format = "json"
 
-        and: "repository will return a list of 1 coffee break preference"
-        CoffeeBreakPreferenceRepository repository = Mock(CoffeeBreakPreferenceRepository)
-        StaffMember staffMember = Stub(StaffMember)
+        and: "preferenceService will return a list of 1 CoffeeBreakPreference"
+        CoffeeBreakPreferenceService preferenceService = Mock(CoffeeBreakPreferenceService)
+        StaffMemberService staffMemberService = Mock(StaffMemberService)
+        /*StaffMember staffMember = Stub(StaffMember)
         staffMember.getEmail() >> "t.smith@email.com"
         staffMember.getName() >> "t smith"
         staffMember.getId() >> 1
-        staffMember.getSlackIdentifier() >> ""
+        staffMember.getSlackIdentifier() >> ""*/
         CoffeeBreakPreference breakPreference = Stub(CoffeeBreakPreference)
-        breakPreference.getType() >> "food"
-        breakPreference.getSubType() >> "sandwitch"
+        /*breakPreference.setType("food")
+        breakPreference.setSubType("sandwitch")
         HashMap<String, String> details = new HashMap<String, String>()
-        breakPreference.getDetails() >> details.put("condiment", "ketchup")
-        breakPreference.getRequestedBy() >> staffMember
-        breakPreference.getRequestedDate() >> Instant.now()
-        repository.getPreferencesForToday() >> List.of(breakPreference)
+        breakPreference.setRequestedBy(staffMember)
+        breakPreference.setRequestedDate( Instant.now())
+        details.put("condiment", "ketchup")
+        breakPreference.setDetails(details)*/
+        breakPreference.getAsJson() >> "{}"
+        preferenceService.getCurrentPreferences() >> List.of(breakPreference)
 
         and: "We construct the CoffeeBreakController"
-        CoffeeBreakPreferenceController preferenceController = new CoffeeBreakPreferenceController(repository)
+        CoffeeBreakPreferenceController preferenceController = new CoffeeBreakPreferenceController(preferenceService, staffMemberService)
 
         when: "We call the today method"
         ResponseEntity<?> responseEntity = preferenceController.today(format)
@@ -65,7 +66,7 @@ class CoffeeBreakPreferenceControllerSpec extends Specification {
         responseEntity.headers.getFirst("content-type") == "application/json"
 
         and: "returns json response"
-        responseEntity.getBody() == "{}"
+        responseEntity.getBody() == "{\"preferences\":[{}]}"
     }
 
     def "NotifyStaffMember"() {

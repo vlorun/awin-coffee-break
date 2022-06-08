@@ -2,14 +2,13 @@ package com.awin.coffeebreak.controller;
 
 import com.awin.coffeebreak.entity.CoffeeBreakPreference;
 import com.awin.coffeebreak.entity.StaffMember;
-import com.awin.coffeebreak.repository.CoffeeBreakPreferenceRepository;
-import com.awin.coffeebreak.repository.StaffMemberRepository;
 import com.awin.coffeebreak.services.CoffeeBreakPreferenceService;
 import com.awin.coffeebreak.services.SlackNotifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.awin.coffeebreak.services.StaffMemberService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,12 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class CoffeeBreakPreferenceController {
 
     public CoffeeBreakPreferenceService coffeeBreakPreferenceService;
-    public StaffMemberRepository staffMemberRepository;
+    public StaffMemberService staffMemberService;
 
     public CoffeeBreakPreferenceController(
-          CoffeeBreakPreferenceService coffeeBreakPreferenceService
+          CoffeeBreakPreferenceService coffeeBreakPreferenceService,
+          StaffMemberService staffMemberService
     ) {
         this.coffeeBreakPreferenceService = coffeeBreakPreferenceService;
+        this.staffMemberService = staffMemberService;
     }
 
     /**
@@ -66,7 +67,7 @@ public class CoffeeBreakPreferenceController {
 
     @GetMapping("/notifyStaffMember")
     public ResponseEntity<Object> notifyStaffMember(@RequestParam("staffMemberId") int id) {
-        Optional<StaffMember> staffMember = this.staffMemberRepository.findById(id);
+        Optional<StaffMember> staffMember = this.staffMemberService.findById(id);
 
         List<CoffeeBreakPreference> preferences = new ArrayList<>();
 
