@@ -3,6 +3,7 @@ package com.awin.coffeebreak.controller
 import com.awin.coffeebreak.entity.CoffeeBreakPreference
 import com.awin.coffeebreak.entity.StaffMember
 import com.awin.coffeebreak.repository.CoffeeBreakPreferenceRepository
+import com.awin.coffeebreak.services.CoffeeBreakPreferenceService
 import org.springframework.http.ResponseEntity
 import spock.lang.Specification
 
@@ -15,8 +16,8 @@ class CoffeeBreakPreferenceControllerSpec extends Specification {
         def format = null
 
         and: "repository will return an empty list"
-        CoffeeBreakPreferenceRepository repository = Mock(CoffeeBreakPreferenceRepository)
-        repository.getPreferencesForToday() >> List.of()
+        CoffeeBreakPreferenceService repository = Mock(CoffeeBreakPreferenceService)
+        repository.getCurrentPreferences() >> List.of()
 
         and: "We construct the CoffeeBreakController"
         CoffeeBreakPreferenceController preferenceController = new CoffeeBreakPreferenceController(repository)
@@ -64,7 +65,7 @@ class CoffeeBreakPreferenceControllerSpec extends Specification {
         responseEntity.headers.getFirst("content-type") == "application/json"
 
         and: "returns json response"
-        responseEntity.getBody() == "dsaf"
+        responseEntity.getBody() == "{}"
     }
 
     def "NotifyStaffMember"() {
